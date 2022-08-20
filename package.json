@@ -2,17 +2,17 @@
   "name": "undiscord",
   "nameFull": "Undiscord",
   "userScript": {
-    "namespace": "https://github.com/victornpb/deleteDiscordMessages",
+    "namespace": "https://github.com/LianSheng197/deleteDiscordMessages",
     "match": [
       "https://*.discord.com/app",
       "https://*.discord.com/channels/*",
       "https://*.discord.com/login"
     ],
-    "downloadURL": "https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js",
+    "downloadURL": "https://raw.githubusercontent.com/LianSheng197/deleteDiscordMessages/master/deleteDiscordMessages.user.js",
     "contributionURL": "https://www.buymeacoffee.com/vitim",
     "grant": "none"
   },
-  "version": "5.0.3",
+  "version": "5.0.3-custom-version",
   "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
   "license": "MIT",
   "engines": {
@@ -20,13 +20,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/victornpb/undiscord.git"
+    "url": "git+https://github.com/LianSheng197/undiscord.git"
   },
   "bugs": {
-    "url": "https://github.com/victornpb/undiscord/issues"
+    "url": "https://github.com/LianSheng197/undiscord/issues"
   },
-  "homepage": "https://github.com/victornpb/undiscord",
-  "author": "victornpb",
+  "homepage": "https://github.com/LianSheng197/undiscord",
+  "author": "LianSheng197 (Original: victornpb)",
   "main": "deleteDiscordMessages.user.js",
   "module": "dist/foo-bar.esm.js",
   "unpkg": "dist/foo-bar.js",

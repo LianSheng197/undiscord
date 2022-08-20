@@ -1,23 +1,23 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.0.3
-// @author          victornpb
-// @homepageURL     https://github.com/victornpb/undiscord
-// @supportURL      https://github.com/victornpb/undiscord/issues
+// @version         5.0.3-custom-version
+// @author          LianSheng197 (Original: victornpb)
+// @homepageURL     https://github.com/LianSheng197/undiscord
+// @supportURL      https://github.com/LianSheng197/undiscord/issues
 // @match           https://*.discord.com/app
 // @match           https://*.discord.com/channels/*
 // @match           https://*.discord.com/login
 // @license         MIT
-// @namespace       https://github.com/victornpb/deleteDiscordMessages
-// @downloadURL     https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
+// @namespace       https://github.com/LianSheng197/deleteDiscordMessages
+// @downloadURL     https://raw.githubusercontent.com/LianSheng197/deleteDiscordMessages/master/deleteDiscordMessages.user.js
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant           none
 // ==/UserScript==
 (function () {
   'use strict';
 
-  var version = "5.0.3";
+  var version = "5.0.3-custom-version";
 
   var discordStyles = (`
 /* undiscord window */
