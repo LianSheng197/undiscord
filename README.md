@@ -22,7 +22,8 @@ This is a custom version (Current base on v5.0.3)
 
 * \[Oldest]
   * Change metadata.
-  * Add inputs `Plus Random Delay Min` and `Plus Random Delay Max` in "Advanced settings", hope them can avoid overly regular consecutive requests.
+  * Add inputs `Plus Random Delay Min` and `Plus Random Delay Max` in "Advanced settings", hope them can avoid overly regular consecutive requests.  
+  ![](assets/screenshot.png)
 * \[Latest]
 
 
