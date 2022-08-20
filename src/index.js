@@ -153,6 +153,8 @@ async function start() {
   //advanced
   const searchDelay = parseInt($('input#searchDelay').value.trim());
   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+  const randomDelayMin = parseInt($('input#randomDelayMin').value.trim());
+  const randomDelayMax = parseInt($('input#randomDelayMax').value.trim());
 
   // progress handler
   const progress = $('#progressBar');
@@ -193,7 +195,7 @@ async function start() {
   for (let i = 0; i < channelIds.length; i++) {
     $('#start').disabled = true;
     $('#stop').disabled = false;
-    await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
+    await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, randomDelayMin, randomDelayMax, logger, stopHndl, onProg);
     stop(); // clear the running state
   }
 

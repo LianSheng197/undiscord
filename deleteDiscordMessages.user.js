@@ -654,6 +654,24 @@
                         Use the help link for more information.
                     </div>
                 </fieldset>
+                <fieldset>
+                    <legend>
+                        Plus random delay min
+                        <a href="#" title="Custom Function">[Custom]</a>
+                    </legend>
+                    <div class="input-wrapper">
+                        <input id="randomDelayMin" type="number" value="0" step="100">
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Plus random delay max
+                        <a href="#" title="Custom Function">[Custom]</a>
+                    </legend>
+                    <div class="input-wrapper">
+                        <input id="randomDelayMax" type="number" value="500" step="100">
+                    </div>
+                </fieldset>
             </details>
             <hr>
             <div></div>
@@ -708,10 +726,12 @@
    * @param {boolean} includeNsfw Search in NSFW channels
    * @param {function(string, Array)} extLogger Function for logging
    * @param {function} stopHndl stopHndl used for stopping
+   * @param {number} randomPlusDelay()Min
+   * @param {number} randomPlusDelay()Max
    * @author Victornpb <https://www.github.com/victornpb>
    * @see https://github.com/victornpb/undiscord
    */
-  async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
+  async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, randomPlusDelayMin, randomPlusDelayMax, extLogger, stopHndl, onProgress) {
     const start = new Date();
     let delCount = 0;
     let failCount = 0;
@@ -723,13 +743,15 @@
     let offset = 0;
     let iterations = -1;
 
-    const wait = async ms => new Promise(done => setTimeout(done, ms));
+    let randomPlusDelay = () => getRandomIntInclusive(randomPlusDelayMin, randomPlusDelayMax);
+
+    const wait = async ms => new Promise(done => setTimeout(done, ms + randomPlusDelay()));
     const msToHMS = s => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
     const escapeHTML = html => html.replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
     const redact = str => `<span class="priv">${escapeHTML(str)}</span><span class="mask">REDACTED</span>`;
     const queryString = params => params.filter(p => p[1] !== undefined).map(p => p[0] + '=' + encodeURIComponent(p[1])).join('&');
     const ask = async msg => new Promise(resolve => setTimeout(() => resolve(window.confirm(msg)), 10));
-    const printDelayStats = () => log.verb(`Delete delay: ${deleteDelay}ms, Search delay: ${searchDelay}ms`, `Last Ping: ${lastPing}ms, Average Ping: ${avgPing | 0}ms`);
+    const printDelayStats = () => log.verb(`Delete delay: ${deleteDelay + randomPlusDelay()}ms, Search delay: ${searchDelay + randomPlusDelay()}ms`, `Last Ping: ${lastPing}ms, Average Ping: ${avgPing | 0}ms`);
     const toSnowflake = (date) => /:/.test(date) ? ((new Date(date).getTime() - 1420070400000) * Math.pow(2, 22)) : date;
 
     const log = {
@@ -830,7 +852,7 @@
         log.debug(`Deleted ${delCount} messages, ${failCount} failed.\n`);
       };
 
-      const etr = msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + avgPing) * total));
+      const etr = msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + randomPlusDelay() + avgPing) * total));
       log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, To be deleted: ${messagesToDelete.length}, System: ${skippedMessages.length})`, `offset: ${offset}`);
       printDelayStats();
       log.verb(`Estimated time remaining: ${etr}`);
@@ -841,7 +863,7 @@
         if (++iterations < 1) {
           log.verb('Waiting for your confirmation...');
           if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
-                      messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
+            messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
             return end(log.error('Aborted by you!'));
           log.verb('OK');
         }
@@ -878,8 +900,8 @@
               const w = (await resp.json()).retry_after * 1000;
               throttledCount++;
               throttledTotalTime += w;
-              deleteDelay = w; // increase delay
-              log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay}ms.`);
+              deleteDelay = w + randomPlusDelay(); // increase delay
+              log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay + randomPlusDelay()}ms.`);
               printDelayStats();
               log.verb(`Cooling down for ${w * 2}ms before retrying...`);
               await wait(w * 2);
@@ -891,7 +913,7 @@
             }
           }
 
-          await wait(deleteDelay);
+          await wait(deleteDelay + randomPlusDelay());
         }
 
         if (skippedMessages.length > 0) {
@@ -900,8 +922,8 @@
           log.verb(`Found ${skippedMessages.length} system messages! Decreasing grandTotal to ${grandTotal} and increasing offset to ${offset}.`);
         }
 
-        log.verb(`Searching next messages in ${searchDelay}ms...`, (offset ? `(offset: ${offset})` : ''));
-        await wait(searchDelay);
+        log.verb(`Searching next messages in ${searchDelay + randomPlusDelay()}ms...`, (offset ? `(offset: ${offset})` : ''));
+        await wait(searchDelay + randomPlusDelay());
 
         if (stopHndl && stopHndl()) return end(log.error('Stopped by you!'));
 
@@ -910,6 +932,12 @@
         if (total - offset > 0) log.warn('Ended because API returned an empty page.');
         return end();
       }
+    }
+
+    function getRandomIntInclusive(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
     }
 
     log.success(`\nStarted at ${start.toLocaleString()}`);
@@ -1364,6 +1392,8 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
     //advanced
     const searchDelay = parseInt($('input#searchDelay').value.trim());
     const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+    const randomDelayMin = parseInt($('input#randomDelayMin').value.trim());
+    const randomDelayMax = parseInt($('input#randomDelayMax').value.trim());
 
     // progress handler
     const progress = $('#progressBar');
@@ -1404,7 +1434,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
     for (let i = 0; i < channelIds.length; i++) {
       $('#start').disabled = true;
       $('#stop').disabled = false;
-      await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
+      await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, randomDelayMin, randomDelayMax, logger, stopHndl, onProg);
       stop(); // clear the running state
     }
 

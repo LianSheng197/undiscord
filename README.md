@@ -11,6 +11,26 @@
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/issues?q=is%3Aissue+is%3Aclosed)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/pulls)
 [![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/pulls?q=is%3Apr+is%3Aclosed)
+
+<br>
+<h3 align="center">
+This is a custom version (Current base on v5.0.3)
+</h3>
+<br>
+
+**Changelog**:  
+
+* \[Oldest]
+  * Change metadata.
+  * Add inputs `Plus Random Delay Min` and `Plus Random Delay Max` in "Advanced settings", hope them can avoid overly regular consecutive requests.
+* \[Latest]
+
+
+<br>
+<h3 align="center">
+======== [Original Description] ========
+</h3>
+<br>
 <!-- end shields -->
 
 > ⚠️ **Any tool that automates actions on user accounts, including this one, could result in account termination.** (see [self-bots][self-bots]).  
@@ -24,7 +44,7 @@
    * Edge: [Tampermonkey][edge_tampermonkey]  
    * Safari: ~[Tampermonkey][safari_tampermonkey]~ 
     
-1. Install Undiscord:  
+2. Install Undiscord:  
   [![][greasyfork_icon]][greasyfork_url] or [![][openuserjs_icon]][openuserjs_url]  
   (NOTE: GreasyFork is recommended for now, OpenUserJS is not receiving updates)
 
